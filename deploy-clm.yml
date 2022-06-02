@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: mongo
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+
+        - image: mongo:latest
+          name: mongo
+          ports:
+            - containerPort: 27017
+              hostPort: 27017
+          restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+
+        - image: rabbitmq:management-alpine
+          name: rabbitmq
+          ports:
+            - containerPort: 5671
+              hostPort: 5671
+            - containerPort: 15671
+              hostPort: 15671
+          restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: syslog
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+
+        - args:
+            - -edv
+          image: balabit/syslog-ng:latest
+          name: syslog
+          ports:
+            - containerPort: 514
+              hostPort: 514
+          restartPolicy: Always
